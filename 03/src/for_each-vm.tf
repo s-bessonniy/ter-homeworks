@@ -10,7 +10,7 @@ resource "yandex_compute_instance""datebase_vm" {
   }
 
   name        = each.value.vm_name
-  platform_id = "standard-v1"
+  platform_id = var.vm_resources.platform_id
   resources {
     cores         = each.value.cpu
     memory        = each.value.ram
@@ -26,11 +26,12 @@ boot_disk {
 }  
 
 scheduling_policy {
-  preemptible = true
+  preemptible = var.vm_def
   }
 network_interface {
   subnet_id = yandex_vpc_subnet.develop.id
-  nat       = true
+  security_group_ids = [yandex_vpc_security_group.example.id]
+  nat       = var.vm_def
 }
 
 metadata = var.vms_ssh_root_key
