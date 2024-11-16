@@ -49,7 +49,20 @@ variable "vm_resources" {
   cores = "2" 
   memory = "1"
   core_fraction = "20"
+  platform_id = "standard-v1"
   }
+}
+
+variable "vm_names" {
+  type = string
+  default = "web"
+  
+}
+
+variable "vm_def" {
+  type = bool
+  default = true
+  
 }
 
 variable "vms_ssh_root_key" {
@@ -86,4 +99,26 @@ variable "vm_datebase" {
 
   ]
 
+}
+
+variable "disk_names" {
+  type = string
+  default = "default-disk"
+  
+}
+
+variable "server_disk_names" {
+  type = string
+  default = "storage"
+  
+}
+
+variable "disk_resources" {
+  type = map
+  default = {
+  count      = 3
+  type       = "network-hdd"
+  size       = 1
+  block_size = 4096
+  }
 }
