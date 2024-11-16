@@ -4,14 +4,14 @@ data "yandex_compute_image" "ubuntu" {
 }
 
 resource "yandex_compute_instance" "vm" {
-  name        = "web-${count.index + 1}"
-  platform_id = "standard-v3"
+  name        = "${var.vm_names}-${count.index + 1}"
+  platform_id = var.vm_resources.platform_id
   metadata    = var.vms_ssh_root_key
   count = 2
 
   resources {
-    cores  = var.vm_resources.cores
-    memory = var.vm_resources.memory
+    cores         = var.vm_resources.cores
+    memory        = var.vm_resources.memory
     core_fraction = var.vm_resources.core_fraction
   }
 
@@ -22,11 +22,12 @@ resource "yandex_compute_instance" "vm" {
   }
 
   scheduling_policy {
-    preemptible = true
+    preemptible = var.vm_def
   }
 
   network_interface {
     subnet_id = yandex_vpc_subnet.develop.id
-    nat       = true
+    security_group_ids = [yandex_vpc_security_group.example.id]
+    nat       = var.vm_def
   }
 }
